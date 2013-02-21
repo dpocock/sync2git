@@ -1,0 +1,12 @@
+
+
+PROJECT_ROOT=/home/daniel/svn-mirror/resiprocate
+
+AUTHORS_FILE=${PROJECT_ROOT}/authors.txt
+
+SVN_REPO=https://svn.resiprocate.org/rep/resiprocate
+SVN_LAYOUT="--trunk=main --branches=branches --tags=tags"
+
+#GIT_REPO=${PROJECT_ROOT}/out
+GIT_REPO=git@github.com:resiprocate/resiprocate.git
+
