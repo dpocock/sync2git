@@ -1,11 +1,4 @@
-
-
 PROJECT_ROOT=/home/daniel/svn-mirror/sipdroid
-
-AUTHORS_FILE=/home/daniel/svn-mirror/sipdroid/authors.txt
-
 SVN_REPO=http://sipdroid.googlecode.com/svn
 SVN_LAYOUT="--stdlayout"
-
 GIT_REPO=git@github.com:sipdroid/sipdroid.git
-

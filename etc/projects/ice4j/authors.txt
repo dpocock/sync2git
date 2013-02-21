@@ -1,0 +1,10 @@
+chenzo@sip-communicator.org = Vincent Lucas <chenzo@jitsi.org>
+damencho = Damian Minkov <damencho@jitsi.org>
+damencho@sip-communicator.org = Damian Minkov <damencho@jitsi.org>
+emcho@sip-communicator.org = Emil Ivov <emcho@jitsi.org>
+lubomir.marinov = Lyubomir Marinov <lubomir.marinov@gmail.com>
+(no author) = Emil Ivov <emcho@jitsi.org>
+PawelDomas@gmail.com = Pawel Domas <paweldomas@gmail.com>
+seb@sip-communicator.org = Sebastien Vincent <seb@jitsi.org>
+lubomir.marinov@gmail.com = Lyubomir Marinov <lubomir.marinov@gmail.com>
+paweldomas@gmail.com = Pawel Domas <paweldomas@gmail.com>
