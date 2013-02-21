@@ -5,26 +5,49 @@ set -e
 if [ ! $# -eq 1 ];
 then
   echo "Usage:"
-  echo "$0 <config-file>"
+  echo "$0 <project-name>"
   exit 1
 fi
 
-CONFIG_FILE="$1"
+PROJECT_NAME="$1"
+
+# Set some defaults (can be overridden by config file)
+ETC_DIR=/etc/sync2git/projects/${PROJECT_NAME}
+VAR_DIR=/var/lib/sync2git
+PROJECT_ROOT=${VAR_DIR}/${PROJECT_NAME}
+CONFIG_FILE=${ETC_DIR}/config
+AUTHORS_FILE=${ETC_DIR}/authors.txt
+SVN_LAYOUT="--stdlayout"
 
 . "${CONFIG_FILE}" || exit 1
-
-SVN_CLONE="${PROJECT_ROOT}/svn-clone"
-GIT_BARE="${PROJECT_ROOT}/git-bare-tmp"
 
 if [ ! -d "${PROJECT_ROOT}" ];
 then
   mkdir -p "${PROJECT_ROOT}"
 fi
 
+LOCK_FILE="${PROJECT_ROOT}/.lock"
+if [ -e "${LOCK_FILE}" ];
+then
+  echo "lock file ${LOCK_FILE} exists, aborting"
+  exit 1
+else
+  touch "${LOCK_FILE}"
+fi
+
+if [ ! -z "$AUTHORS_URL" ];
+then
+  AUTHORS_FILE="${PROJECT_ROOT}/authors.txt"
+  wget -q -O "${AUTHORS_FILE}" "${AUTHORS_URL}"
+fi
+SVN_CLONE="${PROJECT_ROOT}/svn-clone"
+GIT_BARE=`mktemp -d`
+
 cd "${PROJECT_ROOT}"
 
 if [ ! -d "${SVN_CLONE}" ];
 then
+  echo "First run, doing a full git-svn clone, this may take a while..."
   git svn clone \
     "${SVN_REPO}" \
     -A "${AUTHORS_FILE}" \
@@ -32,6 +55,7 @@ then
     "${SVN_CLONE}"
   cd "${SVN_CLONE}"
 else
+  echo "git-svn clone already exists, doing a rebase..."
   cd "${SVN_CLONE}"
   git remote rm bare || echo "failed to delete remote:bare, proceeding anyway"
   git svn rebase \
@@ -42,12 +66,6 @@ fi
 git remote add bare "${GIT_BARE}"
 git config remote.bare.push 'refs/remotes/*:refs/heads/*'
 
-if [ -d "${GIT_BARE}" ];
-then
-  rm -rf "${GIT_BARE}"
-fi
-
-mkdir -p "${GIT_BARE}"
 cd "${GIT_BARE}"
 git init --bare .
 git symbolic-ref HEAD refs/heads/trunk
@@ -71,4 +89,5 @@ git push --tags origin master
 git push --all
 
 rm -rf "${GIT_BARE}"
+rm -rf "${LOCK_FILE}"
 
