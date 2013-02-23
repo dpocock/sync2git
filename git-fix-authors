@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Warning: this script is dangerous
+# all commit IDs will change when you do this
+# other people working on branches, forks, or copies
+# of the repository will have significant difficult 
+# merging/pushing their work
+
+export AUTHORS_FILE=`pwd`/authors.txt
+
+if [ ! -e "${AUTHORS_FILE}" ];
+then
+  echo "can't find ${AUTHORS_FILE}, aborting"
+  exit 1
+fi
+ 
+git filter-branch --env-filter '
+ 
+an="$GIT_AUTHOR_NAME"
+am="$GIT_AUTHOR_EMAIL"
+cn="$GIT_COMMITTER_NAME"
+cm="$GIT_COMMITTER_EMAIL"
+ 
+ENTRY=`cat "${AUTHORS_FILE}" | grep "^${an} = "`
+
+if [ ! -z "${ENTRY}" ];
+then
+  full_info=`echo "${ENTRY}" | cut -f2 -d'=' | cut -b2-`
+  an="`echo "${full_info}" | sed -e "s/ <.*\$//\"`"
+  am="`echo "${full_info}" | sed -e "s/^.*</</\"`"
+  cn="$an"
+  cm="$am"
+fi
+ 
+export GIT_AUTHOR_NAME="$an"
+export GIT_AUTHOR_EMAIL="$am"
+export GIT_COMMITTER_NAME="$cn"
+export GIT_COMMITTER_EMAIL="$cm"
+'
