@@ -28,4 +28,4 @@ vherilier = Vincent Herilier <vherilier@gmail.com>
 wavehill09 = wavehill09 <wavehill09@gmail.com>
 wimaxsys = Alexey Demin <wimaxsys@gmail.com>
 yecarrillo@gmail.com = Eduin Carrillo <yecarrillo@gmail.com>
-zblabunk = Zblabunk <zblabunk@gmail.com>
+zblabunk = Pavel Machek <pavel@ucw.cz>
