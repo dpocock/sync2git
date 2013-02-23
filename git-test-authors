@@ -23,6 +23,20 @@ TARGET_FILE="testing.txt"
 cd "${TMP_REPO}"
 git init .
 
+cp "${AUTHORS_FILE}" .
+git add `basename "${AUTHORS_FILE}"`
+git commit -m 'Import authors.txt file'
+
+cat >> README.txt << EOF
+This is a dummy repository containing dummy commits
+
+It has been created with 1 dummy commit from each contributor in authors.txt
+so that we can view the commit history in github and work out which
+contributors are correctly mapped to github accounts.
+EOF
+git add README.txt
+git commit -m 'Add README'
+
 cat "${AUTHORS_FILE}" | while read ;
 do
   full_info=`echo "${REPLY}" | cut -f2 -d'=' | cut -b2-`
@@ -43,5 +57,5 @@ do
 done
 
 git remote add origin "${DEST_REPO}"
-git push -u origin master
+git push -u -f origin master
 
