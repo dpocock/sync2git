@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -e
+
+if [ ! $# -eq 2 ];
+then
+  echo "usage: $0 <src-repo> <dst-repo>"
+  exit 1
+fi
+
+SRC_REPO=$1
+
+DST_REPO=$2
+
+if [ ! -d ${SRC_REPO} ];
+then
+  echo "can't find ${SRC_REPO}"
+  exit 1
+fi
+
+if [ ! -d ${DST_REPO} ];
+then
+  echo "can't find ${DST_REPO}"
+  exit 1
+fi
+
+cd ${SRC_REPO}
+git tag -l | while read ;
+do
+  TAG_NAME="$REPLY"
+  TAG_DATE=`git show --format=medium "$TAG_NAME" | head -5 | grep ^Date | cut -b9-`
+  TAG_MSG=`git show --format=medium "$TAG_NAME" | head -5 | tail -1`
+  TAG_COMMIT=`git show --format=medium "$TAG_NAME" | grep ^commit | cut -f2 -d' '`
+
+  TAG_KEY=`git show --format=format:'tagkeydata!%aD!%ae' "$TAG_NAME" | grep ^tagkeydata`
+
+  TAG_DOW=`echo "$TAG_DATE" | cut -f1 -d' '`
+  TAG_MONTH=`echo "$TAG_DATE" | cut -f2 -d' '`
+  TAG_DAY=`echo "$TAG_DATE" | cut -f3 -d' '`
+  TAG_TIME=`echo "$TAG_DATE" | cut -f4 -d' '`
+  TAG_YEAR=`echo "$TAG_DATE" | cut -f5 -d' '`
+  TAG_OFFSET=`echo "$TAG_DATE" | cut -f6 -d' '`
+  TAG_DATE2="${TAG_DOW}, $TAG_DAY $TAG_MONTH $TAG_YEAR $TAG_TIME $TAG_OFFSET"
+
+  echo "$TAG_NAME"
+  echo "$TAG_DATE2"
+  echo "$TAG_MSG"
+  echo "$TAG_KEY"
+
+done | (
+
+  cd "$DST_REPO"
+
+  while read TAG_NAME;
+  do
+    read TAG_DATE2
+    read TAG_MSG
+    read TAG_KEY
+
+    TAG_COMMIT=`git log --format=format:'tagkeydata!%aD!%ae!%H' | grep "^${TAG_KEY}" | cut -f4 -d'!' `
+
+    faketime "$TAG_DATE2" git tag -s -m "$TAG_MSG" "$TAG_NAME" "$TAG_COMMIT"
+
+  done
+
+)
+
