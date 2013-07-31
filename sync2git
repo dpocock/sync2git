@@ -26,6 +26,8 @@ fi
 for PROJECT_NAME in ${PROJECTS}
 do
 
+  _LOCK_FILE=
+
   # Set some defaults (can be overridden by config file)
   ETC_DIR=/etc/sync2git/projects/${PROJECT_NAME}
   VAR_DIR=/var/lib/sync2git
