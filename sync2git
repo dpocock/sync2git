@@ -87,8 +87,8 @@ do
   git remote add origin "${GIT_REPO}"
   git config branch.master.remote origin
   git config branch.master.merge refs/heads/master
-  git push --tags origin master
-  git push --all
+  git push $FORCE --tags origin master
+  git push $FORCE --all
 
   rm -rf "${GIT_BARE}"
   rm -rf "${LOCK_FILE}"
