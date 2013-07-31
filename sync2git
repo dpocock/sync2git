@@ -2,6 +2,19 @@
 
 set -e
 
+function cleanup_lock {
+  if [ ! -z "${_LOCK_FILE}" ];
+  then
+    if [ -e "${_LOCK_FILE}" ];
+    then
+      echo "Deleting stray lockfile..."
+      rm -rf "${_LOCK_FILE}"
+    fi
+  fi
+}
+
+trap cleanup_lock EXIT
+
 ETC_PROJECTS=/etc/sync2git/projects
 if [ $# -eq 0 ];
 then
@@ -35,6 +48,8 @@ do
     exit 1
   else
     touch "${LOCK_FILE}"
+    # now it is our lock file, we have to clean it up:
+    _LOCK_FILE="${LOCK_FILE}"
   fi
 
   if [ ! -z "$AUTHORS_URL" ];
