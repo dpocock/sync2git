@@ -60,7 +60,7 @@ do
     wget -q -O "${AUTHORS_FILE}" "${AUTHORS_URL}"
   fi
   SVN_CLONE="${PROJECT_ROOT}/svn-clone"
-  GIT_BARE=`mktemp -d`
+  GIT_BARE=`mktemp -d 2>/dev/null || mktemp -d -t 'sync2git'`
 
   cd "${PROJECT_ROOT}"
 
