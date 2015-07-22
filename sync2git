@@ -18,7 +18,7 @@ trap cleanup_lock EXIT
 ETC_PROJECTS=/etc/sync2git/projects
 if [ $# -eq 0 ];
 then
-  PROJECTS=`cd ${ETC_PROJECTS} ; ls`
+  PROJECTS=`cd "${ETC_PROJECTS}" ; ls`
 else
   PROJECTS="$@"
 fi
