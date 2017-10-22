@@ -54,4 +54,21 @@
    0 * * * * sync2git /usr/local/bin/sync2git > /dev/null
    EOF
 
+SVN repository changes URL
+--------------------------
+
+Disable the cron job before making this change.
+
+This only works if there is at least one new commit in SVN.
+
+su - sync2git
+cd /var/lib/sync2git/$PROJECT/svn-clone
+vi .git/config       - comment out old URL, add new URL
+git svn fetch
+vi .git/config       - uncomment old URL, comment out new URL
+git svn rebase -l
+vi .git/config       - comment out old URL, uncomment new URL
+git svn rebase
+
+Noew enable the cron job again.
 
